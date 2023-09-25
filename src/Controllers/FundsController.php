@@ -22,7 +22,7 @@ class FundsController
 
     public function index(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $responseBody = $this->service->getFunds();
+        $responseBody = $this->service->getAll();
 
         return $response->withJson($responseBody)->withStatus($responseBody['status']);
     }

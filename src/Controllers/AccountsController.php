@@ -22,7 +22,7 @@ class AccountsController
 
     public function index(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $responseBody = $this->service->getAccounts();
+        $responseBody = $this->service->getAll();
 
         return $response->withJson($responseBody)->withStatus($responseBody['status']);
     }
