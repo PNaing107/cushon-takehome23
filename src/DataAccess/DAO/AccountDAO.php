@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess;
+namespace App\DataAccess\DAO;
 
+use App\DataAccess\Database;
+use App\DataAccess\DAO\DataAccessor;
 use App\Models\Account;
 
-class AccountDAO
+class AccountDAO implements DataAccessor
 {
     public function getAll(): array
     {
@@ -22,5 +24,16 @@ class AccountDAO
         $result = Database::getInstance()->fetchAll($sql, [], [\PDO::FETCH_CLASS, Account::class] );
 
         return $result;
+    }
+
+    public function getOne(): array
+    {
+        //TODO
+        return [];
+    }
+
+    public function getModelBinding(): string
+    {
+        return Account::class;
     }
 }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess;
+namespace App\DataAccess\DAO;
 
+use App\DataAccess\Database;
 use App\Models\Fund;
-use App\Models\ResourceCollection;
 
-class FundDAO
+class FundDAO implements DataAccessor
 {
     public function getAll(): array
     {
@@ -15,11 +15,18 @@ class FundDAO
 
         $result = Database::getInstance()->fetchAll($sql, [], [\PDO::FETCH_CLASS, Fund::class] );
 
-        
-        $resourceCollection = new ResourceCollection;
-        
-        $resourceCollection->setCollection($result);
-
         return $result;
     }
+
+    public function getOne(): array
+    {
+        //TODO
+        return [];
+    }
+
+    public function getModelBinding(): string
+    {
+        return Fund::class;
+    }
+
 }
