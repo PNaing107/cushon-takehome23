@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\DataAccess\Database;
-use DateTime;
 use JsonSerializable;
 
 class Fund implements JsonSerializable
