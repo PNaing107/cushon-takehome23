@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use App\DataAccess\Database;
 use App\DataAccess\FundDAO;
-use App\Models\CoursesModel;
 
 class FundService extends AbstractService
 {
