@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Http\Factory\DecoratedResponseFactory;
@@ -9,6 +10,10 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+// load environment variables
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
