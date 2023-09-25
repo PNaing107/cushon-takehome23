@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Controllers\AccountsController;
 use App\Controllers\FundsController;
 use Slim\App;
 use Slim\Views\PhpRenderer;
@@ -23,5 +24,8 @@ return function (App $app) {
     $app->get('/funds', FundsController::class . ':index');
 
     // Routes to create, update and delete Funds must be restricted to Admins only (out of scope for this task)
+
+    // Authenticated Routes
+    $app->get('/accounts', AccountsController::class . ':index');
 
 };
