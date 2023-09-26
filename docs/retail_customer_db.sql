@@ -38,11 +38,11 @@ DROP TABLE IF EXISTS `investment_transactions`;
 
 CREATE TABLE `investment_transactions` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `account_id` UUID NOT NULL,
+    `account_id` int(11) UNSIGNED NOT NULL,
     `fund_id` int(11) NOT NULL,
-    `amount` decimal(10,2) UNSIGNED NOT NULL,
-    `type` ENUM('withdraw', 'deposit') NOT NULL,
-    `creted_at` DATETIME NOT NULL,
+    `amount` decimal(10,2) SIGNED NOT NULL,
+    `net_asset_value` decimal(10,2) SIGNED NOT NULL,
+    `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -67,7 +67,8 @@ INSERT INTO `account_types` (`id`, `name`, `description`) VALUES
 DROP TABLE IF EXISTS `customers`;
 
 CREATE TABLE `customers` (
-    `id` UUID NOT NULL,
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `uuid` UUID NOT NULL,
     `name` varchar(255) NOT NULL,
     `email` varchar(255) NOT NULL,
     `username` varchar(255) NOT NULL,
@@ -79,24 +80,26 @@ CREATE TABLE `customers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Populate `customers` table with dummy data
-INSERT INTO `customers` (`id`, `name`, `email`, `username`, `password`, `created_at`, `updated_at`, `deleted_at`) VALUES
-('550e8400-e29b-41d4-a716-446655440000', 'Jane Doe', 'jane.doe@example.com', 'jd1234', 'b2d2d1f5c536fb0a6c28e128d340fa8c9675ac4c9cf6959b5e48c874b1a37627', NOW(), NOW(), null);
+INSERT INTO `customers` (`id`, `uuid`, `name`, `email`, `username`, `password`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1,'550e8400-e29b-41d4-a716-446655440000', 'Jane Doe', 'jane.doe@example.com', 'jd1234', 'b2d2d1f5c536fb0a6c28e128d340fa8c9675ac4c9cf6959b5e48c874b1a37627', NOW(), NOW(), null);
 
 -- Create `accounts` table
 DROP TABLE IF EXISTS `accounts`;
 
 CREATE TABLE `accounts` (
-    `id` UUID NOT NULL,
-    `customer_id` UUID NOT NULL,
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `customer_id` int(11) UNSIGNED NOT NULL,
     `account_type_id` int(11) UNSIGNED NOT NULL,
+    `saving_account_uuid` UUID,
+    `investment_account_uuid` UUID,
     `created_at` DATETIME NOT NULL,
     `deleted_at` DATETIME,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Populate `accounts` table with dummy data
-INSERT INTO `accounts` (`id`, `customer_id`, `account_type_id`, `created_at`, `deleted_at`) VALUES
-('10027d8e-5afb-11ee-8c99-0242ac120002','550e8400-e29b-41d4-a716-446655440000', 4, NOW(), NULL);
+INSERT INTO `accounts` (`id`, `customer_id`, `account_type_id`, `saving_account_uuid`, `investment_account_uuid`,  `created_at`, `deleted_at`) VALUES
+(1, 1, 4, NULL, '34065162-5c07-11ee-8c99-0242ac120002', NOW(), NULL);
 
 -- Add indexes, foreign keys, and other constraints if needed
 -- Example: CREATE INDEX index_name ON table_name (column_name);
