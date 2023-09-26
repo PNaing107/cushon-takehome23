@@ -10,7 +10,7 @@ use App\Models\Account;
 
 class AccountDAO implements DataAccessor
 {
-    public function getAll(): array
+    public function getAll(mixed $identifier): array
     {
         $sql = 'SELECT
                 `ac`.`id` `id`,
@@ -19,9 +19,11 @@ class AccountDAO implements DataAccessor
                 `ac`.`created_at` `created_at`
                 FROM `accounts` as `ac`
                 LEFT JOIN `account_types` as `at` on `at`.`id` = `ac`.`account_type_id`
-                where `ac`.`deleted_at` IS NULL;';
+                WHERE 1=1
+                AND `ac`.`customer_id` = (SELECT `id` FROM `customers` WHERE `uuid` = :uuid)
+                AND `ac`.`deleted_at` IS NULL;';
 
-        $result = Database::getInstance()->fetchAll($sql, [], [\PDO::FETCH_CLASS, Account::class] );
+        $result = Database::getInstance()->fetchAll($sql, [$identifier], [\PDO::FETCH_CLASS, Account::class] );
 
         return $result;
     }

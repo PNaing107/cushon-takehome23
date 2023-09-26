@@ -6,7 +6,7 @@ namespace App\DataAccess\DAO;
 
 interface DataAccessor
 {
-    public function getAll(): array;
+    public function getAll(mixed $identifier): array;
 
     public function getOne(): array;
 

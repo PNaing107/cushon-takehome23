@@ -9,7 +9,7 @@ use App\Models\Fund;
 
 class FundDAO implements DataAccessor
 {
-    public function getAll(): array
+    public function getAll(mixed $identifier): array
     {
         $sql = 'SELECT * FROM `funds` where `deleted_at` IS NULL;';
 

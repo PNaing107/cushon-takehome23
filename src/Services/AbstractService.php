@@ -19,10 +19,10 @@ abstract class AbstractService
         $this->accessor = $accessor;
     }
 
-    public function getAll(): array
+    public function getAll(mixed $identifier): array
     {
         try {
-            $data = $this->accessor->getAll();
+            $data = $this->accessor->getAll($identifier);
         } catch (\PDOException $exception) {
             $this->responseBody['message'] = $exception->getMessage();
         }
