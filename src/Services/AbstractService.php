@@ -19,7 +19,7 @@ abstract class AbstractService
         $this->accessor = $accessor;
     }
 
-    public function getAll(mixed $identifier): array
+    public function getAll(mixed $identifier = null): array
     {
         try {
             $data = $this->accessor->getAll($identifier);
