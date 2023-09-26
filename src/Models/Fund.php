@@ -66,6 +66,7 @@ class Fund implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->getId(),
             'symbol' => $this->getSymbol(),
             'name' => $this->getName(),
             'net_asset_value' => $this->getNetAssetValue(),
