@@ -74,7 +74,7 @@ class Database
      * @param array $values
      * @return array
      */
-    public function fetch(string $sql, array $values = [], array $fetchMode = [\PDO::FETCH_ASSOC]): array
+    public function fetch(string $sql, array $values = [], array $fetchMode = [\PDO::FETCH_ASSOC]): mixed
     {
         $statement = $this->prepareAndExecute($sql, $values, $fetchMode);
 
