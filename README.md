@@ -1,6 +1,8 @@
 # Cushon Retail Customer
 ## Background
+
 Cushon is a FinTech provider of workplace savings and pensions. Through a combination of web and native applications, Cushon offers pensions and investment services to direct members, employers and via intermediaries and payroll providers.
+
 ---
 ## Brief
 - Cushon want to expand their Investment ISA offering to retail customers.
