@@ -61,8 +61,7 @@ class InvestmentTransactionDAO implements DataAccessor
                 VALUES 
                 (:accountId, :fundId, :amount, :netAssetValue)';
 
-        Database::getInstance()->fetch($sql, [$accountId, $fundId, $amount,  $netAssetValue]);
-
+        return Database::getInstance()->fetch($sql, [$accountId, $fundId, $amount,  $netAssetValue]);
     }
 
     public function getModelBinding(): string
