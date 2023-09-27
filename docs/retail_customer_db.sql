@@ -2,9 +2,14 @@
 CREATE DATABASE IF NOT EXISTS retail_customers;
 USE retail_customers;
 
--- Create `funds` table
+-- tables with foreign keys have to be dropped first
+DROP TABLE IF EXISTS `accounts`;
+DROP TABLE IF EXISTS `investment_transactions`;
 DROP TABLE IF EXISTS `funds`;
+DROP TABLE IF EXISTS `account_types`;
+DROP TABLE IF EXISTS `customers`;
 
+-- Create `funds` table
 CREATE TABLE `funds` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `symbol` varchar(255) NOT NULL,
@@ -13,8 +18,8 @@ CREATE TABLE `funds` (
     `risk_factor` INT UNSIGNED NOT NULL,
     CHECK (risk_factor BETWEEN 1 AND 10),
     `ongoing_charge` decimal(4,2) UNSIGNED NOT NULL,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL,
+    `created_at` DATETIME DEFAULT NOW(),
+    `updated_at` DATETIME DEFAULT NOW(),
     `deleted_at` DATETIME,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -34,21 +39,20 @@ INSERT INTO `funds` (`id`,`symbol`, `name`, `net_asset_value`, `risk_factor`, `o
 (11,'NVDA', 'NVIDIA Corp Fund', 220.75, 8, 2.10, NOW(), NOW(), null);
 
 -- Create `investment_transactions` table
-DROP TABLE IF EXISTS `investment_transactions`;
-
 CREATE TABLE `investment_transactions` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `account_id` int(11) UNSIGNED NOT NULL,
-    `fund_id` int(11) NOT NULL,
+    `fund_id` int(11) UNSIGNED NOT NULL,
     `amount` decimal(10,2) SIGNED NOT NULL,
-    `net_asset_value` decimal(10,2) SIGNED NOT NULL,
-    `created_at` DATETIME NOT NULL,
+    `net_asset_value` decimal(10,2) NOT NULL,
+    `shares` decimal(21,13) GENERATED ALWAYS AS (`amount` / `net_asset_value`) STORED,
+    `created_at` DATETIME DEFAULT NOW(),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Create `account_types` table
-DROP TABLE IF EXISTS `account_types`;
+-- ref: https://learn.microsoft.com/en-us/sql/t-sql/data-types/precision-scale-and-length-transact-sql?view=sql-server-ver16
 
+-- Create `account_types` table
 CREATE TABLE `account_types` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
@@ -64,8 +68,6 @@ INSERT INTO `account_types` (`id`, `name`, `description`) VALUES
 (4, 'Cushon Investment Account', "A savings account where you hold investments, but unlike an ISA, isn't tax-free.");
 
 -- Create `customers` table
-DROP TABLE IF EXISTS `customers`;
-
 CREATE TABLE `customers` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `uuid` UUID NOT NULL,
@@ -73,8 +75,8 @@ CREATE TABLE `customers` (
     `email` varchar(255) NOT NULL,
     `username` varchar(255) NOT NULL,
     `password` char(64) NOT NULL,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL,
+    `created_at` DATETIME DEFAULT NOW(),
+    `updated_at` DATETIME DEFAULT NOW(),
     `deleted_at` DATETIME,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -84,15 +86,13 @@ INSERT INTO `customers` (`id`, `uuid`, `name`, `email`, `username`, `password`, 
 (1,'550e8400-e29b-41d4-a716-446655440000', 'Jane Doe', 'jane.doe@example.com', 'jd1234', 'b2d2d1f5c536fb0a6c28e128d340fa8c9675ac4c9cf6959b5e48c874b1a37627', NOW(), NOW(), null);
 
 -- Create `accounts` table
-DROP TABLE IF EXISTS `accounts`;
-
 CREATE TABLE `accounts` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `customer_id` int(11) UNSIGNED NOT NULL,
     `account_type_id` int(11) UNSIGNED NOT NULL,
     `saving_account_uuid` UUID,
     `investment_account_uuid` UUID,
-    `created_at` DATETIME NOT NULL,
+    `created_at` DATETIME DEFAULT NOW(),
     `deleted_at` DATETIME,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -108,3 +108,18 @@ INSERT INTO `accounts` (`id`, `customer_id`, `account_type_id`, `saving_account_
     -- CONSTRAINT `fk_investment_transactions_funds` FOREIGN KEY (`fund_id`) REFERENCES `funds` (`id`),
     -- KEY `fk_investment_transactions_accounts` (`account_id`),
     -- CONSTRAINT `fk_investment_transactions_accou` FOREIGN KEY (`fund_id`) REFERENCES `funds` (`id`)
+
+ALTER TABLE `accounts` ADD FOREIGN KEY `fk_accounts_customers` (`customer_id`) REFERENCES `customers` (`id`);
+ALTER TABLE `accounts` ADD FOREIGN KEY `fk_accounts_account_types` (`account_type_id`) REFERENCES `account_types` (`id`);
+ALTER TABLE `investment_transactions` ADD FOREIGN KEY `fk_investment_transactions_funds` (`fund_id`) REFERENCES `funds` (`id`);
+ALTER TABLE `investment_transactions` ADD FOREIGN KEY `fk_investment_transactions_accounts` (`account_id`) REFERENCES `accounts` (`id`);
+
+-- Customers Trigger
+DELIMITER //
+CREATE TRIGGER update_updated_at
+BEFORE UPDATE ON customers FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
+//
+DELIMITER ;
