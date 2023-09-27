@@ -50,7 +50,7 @@ class InvestmentTransactionService extends AbstractService
             return $this->validatePurchase($accountUuid, $body['transactions']);
         } elseif ($body['type'] === 'sell') {
 
-            return $this->validateSell($accountUuid, $body);
+            return $this->validateSell($accountUuid, $body['transactions']);
         } else {
 
             $this->responseBody = [
@@ -61,9 +61,6 @@ class InvestmentTransactionService extends AbstractService
             
             return false;
         }
-
-        //to remove
-        return true;
     }
 
     private function validatePurchase(string $accountUuid, array $transactions): bool
@@ -100,20 +97,30 @@ class InvestmentTransactionService extends AbstractService
             return false;
         }
 
-
+        return true;
     }
 
-
-            // deposit validator
-                //sum all transactions by fund id, if two rows are returned reject, if one row returned by it doesn't match the incoming transaction reject
-            // withdraw validator
-                // do they have enough to withdraw?
-        // 1. multiple transaction not allowed at the moment
-    
-
-    private function validateSell(string $accountUuid, array $body): bool
+    private function validateSell(string $accountUuid, array $transactions): bool
     {
-        return false;
+        // do they have enough to withdraw?
+        try {
+            $data = $this->accessor->getAggregateShares($accountUuid);
+
+            if(
+                !$data || 
+                $data[0]['symbol'] !== $transactions[0]['symbol'] ||
+                $data[0]['shares'] < abs($transactions[0]['amount'] / $transactions[0]['net_asset_value'])
+            ) {
+                $this->responseBody['message'] = 'Insufficient funds';
+                $this->responseBody['status'] = 400;
+                return false;
+            }
+
+            return true;
+        } catch(\PDOException $exception) {
+            $this->responseBody['message'] = $exception->getMessage();
+            return false;
+        }
     }
 
 }

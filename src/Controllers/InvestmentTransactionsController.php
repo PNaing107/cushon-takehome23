@@ -24,6 +24,8 @@ class InvestmentTransactionsController
     {
         $accountUuid = $args['account_id'];
 
+        // Could add query params for filtering
+
         $responseBody = $this->service->getAll($accountUuid);
 
         return $response->withJson($responseBody)->withStatus($responseBody['status']);
