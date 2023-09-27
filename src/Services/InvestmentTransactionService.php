@@ -6,14 +6,15 @@ namespace App\Services;
 
 use App\DataAccess\DAO\AccountDAO;
 use App\DataAccess\DAO\InvestmentTransactionDAO;
-use PhpParser\Node\Stmt\TryCatch;
 
 class InvestmentTransactionService extends AbstractService
 {
+    private AccountDAO $accountAccessor;
 
-    public function __construct(InvestmentTransactionDAO $investmentTrnsactionDAO)
+    public function __construct(InvestmentTransactionDAO $investmentTransactionDAO, AccountDAO $accountDAO)
     {
-        parent::__construct($investmentTrnsactionDAO);
+        parent::__construct($investmentTransactionDAO);
+        $this->accountAccessor = $accountDAO;
     }
 
     public function store(string $accountUuid, array $body)
@@ -25,7 +26,7 @@ class InvestmentTransactionService extends AbstractService
         // post the transaction and return 201 response
         try {
 
-            $accountId = (new AccountDAO)->exchangeUuid($accountUuid);
+            $accountId = $this->accountAccessor->exchangeUuid($accountUuid);
 
             $this->accessor->store($body['transactions'], $accountId[0]['id']);
 
