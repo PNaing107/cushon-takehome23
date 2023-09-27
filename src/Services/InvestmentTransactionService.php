@@ -25,7 +25,7 @@ class InvestmentTransactionService extends AbstractService
         // post the transaction and return 201 response
         try {
 
-            $accountId = (new AccountDAO)->exchangeUuid($accountUuid, 'investment');
+            $accountId = (new AccountDAO)->exchangeUuid($accountUuid);
 
             $this->accessor->store($body['transactions'], $accountId[0]['id']);
 
