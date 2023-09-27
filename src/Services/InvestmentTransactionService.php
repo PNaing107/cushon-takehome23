@@ -87,7 +87,7 @@ class InvestmentTransactionService extends AbstractService
                     return true;
                 }
 
-                $this->responseBody['message'] = 'You have already invested in another fund. ';
+                $this->responseBody['message'] = 'You have already invested in another fund.';
                 $this->responseBody['status'] = 400;
                 return false;
 
