@@ -20,7 +20,7 @@ class InvestmentTransactionDAO implements DataAccessor
                 `it`.`created_at`
                 FROM `investment_transactions` as `it`
                 INNER JOIN `funds` as `f` on `f`.`id` = `it`.`fund_id` 
-                WHERE `it`.`account_id` = (SELECT `id` FROM `accounts` WHERE `investment_account_uuid` = :accountUuiD);';
+                WHERE `it`.`account_id` = (SELECT `id` FROM `accounts` WHERE `account_uuid` = :accountUuiD);';
 
         $result = Database::getInstance()->fetchAll($sql, [$accountUuid], [\PDO::FETCH_CLASS, InvestmentTransaction::class] );
 
