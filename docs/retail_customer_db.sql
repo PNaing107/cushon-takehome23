@@ -90,15 +90,14 @@ CREATE TABLE `accounts` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `customer_id` int(11) UNSIGNED NOT NULL,
     `account_type_id` int(11) UNSIGNED NOT NULL,
-    `saving_account_uuid` UUID,
-    `investment_account_uuid` UUID,
+    `account_uuid` UUID,
     `created_at` DATETIME DEFAULT NOW(),
     `deleted_at` DATETIME,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Populate `accounts` table with dummy data
-INSERT INTO `accounts` (`id`, `customer_id`, `account_type_id`, `saving_account_uuid`, `investment_account_uuid`,  `created_at`, `deleted_at`) VALUES
+INSERT INTO `accounts` (`id`, `customer_id`, `account_type_id`, `account_uuid`,  `created_at`, `deleted_at`) VALUES
 (1, 1, 4, NULL, '34065162-5c07-11ee-8c99-0242ac120002', NOW(), NULL);
 
 -- Add indexes, foreign keys, and other constraints if needed
