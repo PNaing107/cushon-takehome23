@@ -39,11 +39,10 @@ class AccountDAO implements DataAccessor
         return Account::class;
     }
 
-    public function exchangeUuid(string $accountUuid, string $type): array
+    public function exchangeUuid(string $accountUuid): array
     {
-        $field = $type === 'investment' ? 'investment_account_uuid' : 'saving_account_uuid';
 
-        $sql = "SELECT `id` FROM `accounts` WHERE $field = :accountUuid";
+        $sql = "SELECT `id` FROM `accounts` WHERE `account_uuid` = :accountUuid";
 
         $result = Database::getInstance()->fetchAll($sql, [$accountUuid]);
 

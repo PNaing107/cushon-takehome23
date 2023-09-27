@@ -40,7 +40,7 @@ class InvestmentTransactionDAO implements DataAccessor
                 SUM(`it`.`shares`) as `shares`
                 FROM `investment_transactions` as `it`
                 INNER JOIN `funds` as `f` on `f`.`id` = `it`.`fund_id`
-                WHERE `it`.`account_id` = (SELECT `id` FROM `accounts` WHERE `investment_account_uuid` = :accountUuid) 
+                WHERE `it`.`account_id` = (SELECT `id` FROM `accounts` WHERE `account_uuid` = :accountUuid) 
                 GROUP BY `f`.`symbol`
                 HAVING `shares` > 0';
 
