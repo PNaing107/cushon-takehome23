@@ -23,11 +23,15 @@ Cushon is a FinTech provider of workplace savings and pensions. Through a combin
 - Withdrawing money from the Cushon ISA is out of scope
 - Only serving UK customers so prices are all in GBP
 ---
+
 ## Retail Customer Database Schema Proposal
 https://miro.com/app/board/uXjVMiUuuGo=/?share_link_id=506487722084
+
 ---
+
 ## RESTful API Documentation
 The API documentation can be found [here](https://app.swaggerhub.com/apis/PHONENAINGDEV/Cushon-Retail-Customer/1.0.0)
+
 ---
 ## Tech Stack
 
