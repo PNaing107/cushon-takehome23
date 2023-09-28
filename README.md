@@ -26,6 +26,9 @@ Cushon is a FinTech provider of workplace savings and pensions. Through a combin
 ## Retail Customer Database Schema Proposal
 https://miro.com/app/board/uXjVMiUuuGo=/?share_link_id=506487722084
 ---
+## RESTful API Documentation
+The API documentation can be found [here](https://app.swaggerhub.com/apis/PHONENAINGDEV/Cushon-Retail-Customer/1.0.0)
+---
 ## Tech Stack
 
 This demo RESTful API has been built using a Slim Framework 4 skeleton. It uses the latest Slim 4 with Slim PSR-7 implementation and PHP-DI container implementation. It also uses the Monolog logger.
