@@ -71,7 +71,7 @@ class InvestmentTransactionService extends AbstractService
 
             $this->responseBody = [
                 'message' => 'You can only purchase one fund',
-                'status' => 400,
+                'status' => 406,
                 'data' => []
             ];
 
@@ -89,7 +89,7 @@ class InvestmentTransactionService extends AbstractService
                 }
 
                 $this->responseBody['message'] = 'You have already invested in another fund.';
-                $this->responseBody['status'] = 400;
+                $this->responseBody['status'] = 406;
                 return false;
 
             }
@@ -113,7 +113,7 @@ class InvestmentTransactionService extends AbstractService
                 $data[0]['shares'] < abs($transactions[0]['amount'] / $transactions[0]['net_asset_value'])
             ) {
                 $this->responseBody['message'] = 'Insufficient funds';
-                $this->responseBody['status'] = 400;
+                $this->responseBody['status'] = 406;
                 return false;
             }
 
