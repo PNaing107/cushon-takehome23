@@ -11,18 +11,20 @@ use App\Services\Validation\InvestmentTransactionValidator;
 class InvestmentTransactionService extends AbstractService
 {
     private AccountDAO $accountAccessor;
+    private InvestmentTransactionValidator $validator;
 
-    public function __construct(InvestmentTransactionDAO $investmentTransactionDAO, AccountDAO $accountDAO)
+    public function __construct(InvestmentTransactionDAO $investmentTransactionDAO, AccountDAO $accountDAO, InvestmentTransactionValidator $validator)
     {
         parent::__construct($investmentTransactionDAO);
         $this->accountAccessor = $accountDAO;
+        $this->validator = $validator;
     }
 
     public function store(string $accountUuid, array $body)
     {
-         if(! InvestmentTransactionValidator::validatePostRequest($accountUuid, $body, $this->accessor)) {
-            $this->responseBody['status'] = InvestmentTransactionValidator::getStatusCode();
-            $this->responseBody['message'] = InvestmentTransactionValidator::getErrorMessage();
+         if(! $this->validator::validatePostRequest($accountUuid, $body, $this->accessor)) {
+            $this->responseBody['status'] = $this->validator::getStatusCode();
+            $this->responseBody['message'] = $this->validator::getErrorMessage();
             return $this->responseBody;
         }
 
