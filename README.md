@@ -22,6 +22,7 @@ Cushon is a FinTech provider of workplace savings and pensions. Through a combin
 - There is no lower or upper limit to the amount that a retail customer can deposit into their Cushon ISA
 - Withdrawing money from the Cushon ISA is out of scope
 - Only serving UK customers so prices are all in GBP
+- Customers can only make a single transaction ata a time 
 ---
 
 ## Retail Customer Database Schema Proposal
