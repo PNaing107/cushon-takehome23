@@ -6,9 +6,12 @@ use App\DataAccess\DAO\AccountDAO;
 use App\DataAccess\DAO\InvestmentTransactionDAO;
 use App\Models\InvestmentTransaction;
 use App\Services\InvestmentTransactionService;
+use App\Services\Validation\InvestmentTransactionValidator;
+use \Mockery;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Tests\TestCase;
 
-class InvestmentTransactionServiceTest extends TestCase
+class InvestmentTransactionServiceTest extends MockeryTestCase
 {
     private $accountDAOMock;
 
@@ -27,8 +30,10 @@ class InvestmentTransactionServiceTest extends TestCase
         $accessorMock->method('getAll')
                     ->willThrowException(new \PDOException('Mocked PDO Exception'));
 
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class);
+
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->getAll('abc-123');
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->getAll('abc-123');
 
         // Assert
         $expected = [
@@ -59,8 +64,12 @@ class InvestmentTransactionServiceTest extends TestCase
             'getAll' => $investmentTransactions,
         ]);
 
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => true
+        ]);
+
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->getAll('abc-123');
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->getAll('abc-123');
 
         // Assert
         $expected = [
@@ -106,8 +115,14 @@ class InvestmentTransactionServiceTest extends TestCase
             'store' => null,
         ]);
 
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => false,
+            'getStatusCode' => 406,
+            'getErrorMessage' => 'Invalid Transaction: Multiple Transactions not allowed'
+        ]);
+
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->store('abc-123', $body);
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
 
         // Assert
         $expected = [
@@ -148,8 +163,14 @@ class InvestmentTransactionServiceTest extends TestCase
             'store' => null,
         ]);
 
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => false,
+            'getStatusCode' => 406,
+            'getErrorMessage' => 'Invalid Transaction: You have already invested in another fund.'
+        ]);
+
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->store('abc-123', $body);
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
 
         // Assert
         $expected = [
@@ -186,8 +207,12 @@ class InvestmentTransactionServiceTest extends TestCase
             'store' => 1,
         ]);
 
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => true
+        ]);
+
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->store('abc-123', $body);
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
 
         // Assert
         $expected = [
@@ -204,7 +229,6 @@ class InvestmentTransactionServiceTest extends TestCase
     {
         // Arrange
         $body = [
-            'type' => 'sell',
             'transactions' => [
                 [
                     'id' => 1,
@@ -214,6 +238,10 @@ class InvestmentTransactionServiceTest extends TestCase
                 ]
             ]
         ];
+
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => true
+        ]);
 
         $accessorMock = $this->createConfiguredMock(InvestmentTransactionDAO::class, [
             'getAggregateShares' => [
@@ -226,7 +254,7 @@ class InvestmentTransactionServiceTest extends TestCase
         ]);
 
         // Act
-        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock))->store('abc-123', $body);
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
 
         // Assert
         $expected = [
