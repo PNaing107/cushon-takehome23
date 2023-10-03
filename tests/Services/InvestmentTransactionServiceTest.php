@@ -76,7 +76,6 @@ class InvestmentTransactionServiceTest extends TestCase
     {
         // Arrange
         $body = [
-            'type' => 'buy',
             'transactions' => [
                 [
                     'id' => 1,
@@ -112,8 +111,8 @@ class InvestmentTransactionServiceTest extends TestCase
 
         // Assert
         $expected = [
-            'message' => 'You can only purchase one fund',
-            'status' => 400,
+            'message' => 'Invalid Transaction: Multiple Transactions not allowed',
+            'status' => 406,
             'data' => []
         ];
 
@@ -125,7 +124,6 @@ class InvestmentTransactionServiceTest extends TestCase
     {
         // Arrange
         $body = [
-            'type' => 'buy',
             'transactions' => [
                 [
                     'id' => 1,
@@ -155,8 +153,8 @@ class InvestmentTransactionServiceTest extends TestCase
 
         // Assert
         $expected = [
-            'message' => 'You have already invested in another fund.',
-            'status' => 400,
+            'message' => 'Invalid Transaction: You have already invested in another fund.',
+            'status' => 406,
             'data' => []
         ];
 
@@ -168,7 +166,6 @@ class InvestmentTransactionServiceTest extends TestCase
     {
         // Arrange
         $body = [
-            'type' => 'buy',
             'transactions' => [
                 [
                     'id' => 1,
