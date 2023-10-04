@@ -14,6 +14,7 @@ class AccountDAO implements DataAccessor
     {
         $sql = 'SELECT
                 `ac`.`id` `id`,
+                `ac`.`account_uuid` `account_uuid`,
                 `ac`.`customer_id` `customer_id`,
                 `at`.`name` `account_type_name`,
                 `ac`.`created_at` `created_at`

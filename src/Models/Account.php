@@ -9,6 +9,7 @@ use JsonSerializable;
 class Account implements JsonSerializable
 {
     private string $id;
+    private string $account_uuid;
     private string $customer_id;
     private string $account_type_name;
     private string $created_at;
@@ -17,6 +18,11 @@ class Account implements JsonSerializable
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->account_uuid;
     }
 
     public function getCustomerId(): string
@@ -43,6 +49,7 @@ class Account implements JsonSerializable
     {
         return [
             'id' => $this->getID(),
+            'account_uuid' => $this->getUuid(),
             'customer_id' => $this->getCustomerId(),
             'account_type' => $this->getAccountTypeName(),
             'created_at' => $this->getCreatedAt()
