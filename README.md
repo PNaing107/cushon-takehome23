@@ -20,7 +20,6 @@ Cushon is a FinTech provider of workplace savings and pensions. Through a combin
 - A retail customer has successfully opened a Cushon ISA
 - Transferring money into a Cushon ISA is handled by another service in the system (the logic for checking ISA allowance is handled by this service)
 - There is no lower or upper limit to the amount that a retail customer can deposit into their Cushon ISA
-- Withdrawing money from the Cushon ISA is out of scope
 - Only serving UK customers so prices are all in GBP
 - Customers can only make a single transaction at a time
 - When customers buy or sell a fund they can decide how much money to invest or withdraw (fractional shares are allowed) 
