@@ -267,4 +267,92 @@ class InvestmentTransactionServiceTest extends MockeryTestCase
 
     }
 
+    public function test_store_returns_correct_response_when_body_contains_invalid_sell_transaction()
+    {
+        // Arrange
+        $body = [
+            'transactions' => [
+                [
+                    'id' => 1,
+                    'symbol' => 'TEST',
+                    'net_asset_value' => 123.45,
+                    'amount' => 0
+                ]
+            ]
+        ];
+
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => false,
+            'getStatusCode' => 406,
+            'getErrorMessage' => 'Invalid Transaction: Transaction amount of 0 is not allowed'
+        ]);
+
+        $accessorMock = $this->createConfiguredMock(InvestmentTransactionDAO::class, [
+            'getAggregateShares' => [
+                [
+                    'symbol' => 'TEST',
+                    'shares' => 1,
+                ]
+            ],
+            'store' => 1,
+        ]);
+
+        // Act
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
+
+        // Assert
+        $expected = [
+            'message' => 'Invalid Transaction: Transaction amount of 0 is not allowed',
+            'status' => 406,
+            'data' => []
+        ];
+
+        $this->assertEquals($expected, $result);
+
+    }
+
+    public function test_store_returns_correct_response_when_body_contains_insufficient_sell_transaction()
+    {
+        // Arrange
+        $body = [
+            'transactions' => [
+                [
+                    'id' => 1,
+                    'symbol' => 'TEST',
+                    'net_asset_value' => 123.45,
+                    'amount' => -2000
+                ]
+            ]
+        ];
+
+        $validatorMock = Mockery::mock('overload:' . InvestmentTransactionValidator::class, [
+            'validatePostRequest' => false,
+            'getStatusCode' => 406,
+            'getErrorMessage' => 'Invalid Transaction: Insufficient funds'
+        ]);
+
+        $accessorMock = $this->createConfiguredMock(InvestmentTransactionDAO::class, [
+            'getAggregateShares' => [
+                [
+                    'symbol' => 'TEST',
+                    'shares' => 1,
+                ]
+            ],
+            'store' => 1,
+        ]);
+
+        // Act
+        $result = (new InvestmentTransactionService($accessorMock, $this->accountDAOMock, $validatorMock))->store('abc-123', $body);
+
+        // Assert
+        $expected = [
+            'message' => 'Invalid Transaction: Insufficient funds',
+            'status' => 406,
+            'data' => []
+        ];
+
+        $this->assertEquals($expected, $result);
+
+    }
+
 }
